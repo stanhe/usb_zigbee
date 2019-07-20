@@ -7,9 +7,9 @@
     tools:context=".MainActivity">
 
     <Button
-        android:onClick="enum_devices"
+        android:onClick="send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="enum devices"/>
+        android:text="send data"/>
 
 </android.support.constraint.ConstraintLayout>
