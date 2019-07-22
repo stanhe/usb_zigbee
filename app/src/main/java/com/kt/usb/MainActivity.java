@@ -116,14 +116,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private UsbSerialInterface.UsbReadCallback mCallback = data -> {
         // Code here :)
-        //Log.e(TAG, "=====> onReceivedData: " + HexSupport.toHexFromBytes(data));
+        //Log.i(TAG, "=====> onReceivedData: " + HexSupport.toHexFromBytes(data));
         if (usbSerialBuffer == null) {
             if (HexSupport.toHexFromBytes(data).startsWith("ED")) {
                 usbSerialBuffer = data;
             }
-        } else {
+        } else if (data.length>0){
             tmpUsbSerialBuffer = new byte[usbSerialBuffer.length + data.length];
             System.arraycopy(usbSerialBuffer, 0, tmpUsbSerialBuffer, 0, usbSerialBuffer.length);
             System.arraycopy(data, 0, tmpUsbSerialBuffer, usbSerialBuffer.length, data.length);
