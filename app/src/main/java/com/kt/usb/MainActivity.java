@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
@@ -45,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
         permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+        filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         registerReceiver(usbReceiver,filter);
         enum_devices();
     }
@@ -82,15 +83,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "permission denied for device " + device);
                 }
             }
-            if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action) || UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+            if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)|| UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                 if (device != null) {
                     // call your method that cleans up and closes communication with the device
-                    Log.e(TAG, "=====> onReceive:  device detached!!!" );
                     if (device.getProductId() == pid && device.getVendorId() == vid) {
+                        Log.e(TAG, "=====> onReceive: close serial!" );
                         serial.close();
                         serial=null;
-                        //isSerialInit.set(false);
+                        MainActivity.this.finish();
                     }
                 }
             }
